@@ -7,10 +7,10 @@
  */
 int main(void)
 {
-		int n = 0;
+	int n = 0;
 
-while (n < 10)
-{
+	while (n < 10)
+	{
 		putchar(48 + n);
 		if (n == 9)
 		{
@@ -19,11 +19,10 @@ while (n < 10)
 		}
 		else
 		{
-		putchar(',');
-		putchar(' ');
-		n++;
+			putchar(',');
+			putchar(' ');
+			n++;
 		}
-}
-
-return (0);
+	}
+	return (0);
 }
