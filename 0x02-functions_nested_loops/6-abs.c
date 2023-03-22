@@ -2,9 +2,9 @@
 #include "main.h"
 
 /**
- * int_abs - function returns absolute values of integer
+ * _abs - function returns absolute values of integer
  *
- *@int: Get value for function
+ *@n: Get value for function
  *
  * Return: returns absolute value
  */
