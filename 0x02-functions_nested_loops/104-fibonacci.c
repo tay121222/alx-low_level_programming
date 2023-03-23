@@ -8,9 +8,10 @@ int main(void)
 {
 	unsigned int a = 0, b = 1, c = 0, d = 1;
 
-	printf("%u , %u, ", b, d);
+	printf("%u, %u", b, d);
+	int i = 2;
 
-	for (int i = 2; i < 98; i++)
+	while (i < 98)
 	{
 		unsigned int ah = a >> 16, al = a & 0xFFFF;
 		unsigned int bh = b >> 16, bl = b & 0xFFFF;
@@ -25,12 +26,8 @@ int main(void)
 		b = c;
 		c = d >> 16;
 		d &= 0xFFFF;
-
-		printf("%u", (b << 16) + d);
-		if (i < 97)
-		{
-			printf(", ");
-		}
+		printf(", %u", (b << 16) + d);
+		i++;
 	}
 	printf("\n");
 
