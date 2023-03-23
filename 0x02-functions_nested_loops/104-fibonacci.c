@@ -9,10 +9,11 @@ int main(void)
 	int n = 0, j = 1, k = 2;
 
 	printf("%d, %d ", j, k);
+	n = 2;
 	while (n < 98)
 	{
-		int i = j + k
-			;
+		int i = j + k;
+
 		printf("%d", i);
 		n++;
 		if (n < 98)
