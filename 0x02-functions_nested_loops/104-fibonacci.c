@@ -7,13 +7,13 @@
 int main(void)
 {
 	int n = 0;
-	long j = 1, k = 2;
+	unsigned long long j = 1, k = 2;
 
 	printf("%ld, %ld ", j, k);
 	n = 2;
 	while (n < 98)
 	{
-		long i = j + k;
+		unsigned long long i = j + k;
 
 		printf("%ld", i);
 		n++;
