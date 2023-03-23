@@ -6,26 +6,21 @@
  */
 int main(void)
 {
-	int i = 0;
-	long j = 1, k = 2;
+	int n = 0, j = 1, k = 2;
 
-	while (i < 96)
+	printf("%d, %d ", j, k);
+	while (n < 98)
 	{
-		if (i == 0)
+		int i = j + k
+			;
+		printf("%d", i);
+		n++;
+		if (n < 98)
 		{
-			printf("%ld", j);
+			printf(", ");
 		}
-		else if (i == 1)
-		{
-			printf(", %ld", k);
-		}
-		else
-		{
-			k += j;
-			j = k - j;
-			printf(", %ld", k);
-		}
-		++i;
+		j = k;
+		k = i;
 	}
 	printf("\n");
 
