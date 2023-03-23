@@ -6,23 +6,31 @@
  */
 int main(void)
 {
-	int n = 0;
-	unsigned long long j = 1, k = 2;
+	unsigned int a = 0, b = 1, c = 0, d = 1;
 
-	printf("%ld, %ld ", j, k);
-	n = 2;
-	while (n < 98)
+	printf("%u , %u, ", b, d);
+
+	for (int i = 2; i < 98; i++)
 	{
-		unsigned long long i = j + k;
+		unsigned int ah = a >> 16, al = a & 0xFFFF;
+		unsigned int bh = b >> 16, bl = b & 0xFFFF;
+		unsigned int ch = c >> 16, cl = c & 0xFFFF;
+		unsigned int dh = d >> 16, dl = d & 0xFFFF;
+		unsigned int low = (al + bl + dl) & 0xFFFF;
+		unsigned int high = ah + bh + ch + (al + bl + dl >> 16);
 
-		printf("%ld", i);
-		n++;
-		if (n < 98)
+		c = b;
+		d = d + high + (low < dl);
+		a = b;
+		b = c;
+		c = d >> 16;
+		d &= 0xFFFF;
+
+		printf("%u", (b << 16) + d);
+		if (i < 97)
 		{
 			printf(", ");
 		}
-		j = k;
-		k = i;
 	}
 	printf("\n");
 
