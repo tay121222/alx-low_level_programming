@@ -8,11 +8,11 @@ int main(void)
 {
 	long a = 1, b = 2, c, run = 2;
 
-	printf("%d, %d", a, b);
+	printf("%ld, %ld", a, b);
 	while (run < 50)
 	{
 		c = a + b;
-		printf(", %d", c);
+		printf(", %ld", c);
 		a = b;
 		b = c;
 		run++;
