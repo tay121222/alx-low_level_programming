@@ -6,7 +6,8 @@
  */
 int main(void)
 {
-	int i = 0, j = 1, k = 2;
+	int i = 0;
+	long j = 1, k = 2;
 
 	while (i < 96)
 	{
