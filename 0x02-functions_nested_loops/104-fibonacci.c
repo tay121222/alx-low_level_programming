@@ -9,13 +9,13 @@ int main(void)
 	int n = 0;
 	long j = 1, k = 2;
 
-	printf("%d, %d ", j, k);
+	printf("%ld, %ld ", j, k);
 	n = 2;
 	while (n < 98)
 	{
 		long i = j + k;
 
-		printf("%d", i);
+		printf("%ld", i);
 		n++;
 		if (n < 98)
 		{
