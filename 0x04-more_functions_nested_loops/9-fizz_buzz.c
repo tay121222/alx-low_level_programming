@@ -13,7 +13,7 @@ int main(void)
 	while (n <= 100)
 	{
 		if ((n % 5 == 0) && (n % 3 == 0))
-   		{
+		{
 			printf("FizzBuzz ");
 		}
 		else if ((n % 3) == 0)
@@ -31,6 +31,5 @@ int main(void)
 		n++;
 	}
 	printf("\n");
-
 	return (0);
 }
