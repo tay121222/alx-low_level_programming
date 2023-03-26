@@ -2,49 +2,52 @@
 
 /**
  * print_times_table - Function to print n times table
- *
- * @n: value to print it's times table
+ * @n: value
  */
 void print_times_table(int n)
 {
-	int i, j, final;
+	int i, j;
 
-	if (n >= 0 && n <= 14)
+	for (i = 0; i <= n; i++)
 	{
-		for (i = 0; i <= n; i++)
+		for (j = 0; j <= n; j++)
 		{
-			for (j = 0; j <= n; j++)
+			int res = i * j;
+			int res_len = 0;
+			int res_copy = res;
+
+			if (res == 0)
 			{
-				final = i * j;
-				if (final > 9)
+				_putchar('0');
+			}
+			else
+			{
+				while (res_copy != 0)
 				{
-					_putchar(',');
-					_putchar(' ');
-					_putchar(' ');
-					_putchar(((final / 10) % 10) + '0');
-					_putchar((final % 10) + '0');
+					res_copy /= 10;
+					res_len++;
 				}
-				else if (final > 99)
+				while (res_copy != 0)
 				{
-					_putchar(',');
-					_putchar(' ');
-					_putchar('0' + (final / 100));
-					_putchar(((final / 10) % 10) + '0');
-					_putchar((final % 10) + '0');
-				}
-				else
-				{
-					if (j != 0)
-					{
-						_putchar(',');
-						_putchar(' ');
-						_putchar(' ');
-						_putchar(' ');
-					}
-					_putchar(final + '0');
+					_putchar((res_copy % 10) + '0');
+					res_copy /= 10;
 				}
 			}
-			_putchar('\n');
+			if (j < n)
+			{
+				_putchar(',');
+				_putchar(' ');
+				if (res < 10)
+				{
+					_putchar(' ');
+				}
+				if (res < 100)
+				{
+					_putchar(' ');
+				}
+			}
 		}
+		_putchar('\n');
 	}
+	return (0);
 }
