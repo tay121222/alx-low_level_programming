@@ -6,27 +6,34 @@
  */
 int main(void)
 {
-	unsigned int a = 0, b = 1, c = 0, d = 1;
-	int i = 2;
+	unsigned long int i;
+	unsigned long int bef = 1;
+	unsigned long int aft = 2;
+	unsigned long int l = 1000000000;
+	unsigned long int bef1;
+	unsigned long int bef2;
+	unsigned long int aft1;
+	unsigned long int aft2;
 
-	printf("%u, %u", b, d);
-	while (i < 98)
+	printf("%lu", bef);
+	for (i = 1; i < 91; i++)
 	{
-		unsigned int ah = a >> 16, al = a & 0xFFFF;
-		unsigned int bh = b >> 16, bl = b & 0xFFFF;
-		unsigned int ch = c >> 16, cl = c & 0xFFFF;
-		unsigned int dh = d >> 16, dl = d & 0xFFFF;
-		unsigned int low = (al + bl + dl) & 0xFFFF;
-		unsigned int high = (ah + bh + ch) + (al + bl + dl >> 16);
-
-		c = b;
-		d = (d + high) + (low < dl);
-		a = b;
-		b = c;
-		c = d >> 16;
-		d &= 0xFFFF;
-		printf(", %u", (b << 16) + d);
-		i++;
+		printf(",%lu", aft);
+		aft += bef;
+		bef = aft - bef;
+	}
+	bef1 = (bef / l);
+	bef2 = (bef % l);
+	aft1 = (aft / l);
+	aft2 = (aft % l);
+	for (i = 92; i < 99; ++i)
+	{
+		printf(", %lu", aft1 + (aft2 / l));
+		printf("%lu", aft2 % l);
+		aft1 = aft1 + bef1;
+		bef1 = aft1 - bef1;
+		aft2 = aft2 + bef2;
+		bef2 = aft2 - bef2;
 	}
 	printf("\n");
 
