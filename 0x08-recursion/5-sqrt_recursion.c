@@ -1,32 +1,22 @@
 #include "main.h"
 /**
  * _sqrt - actual function to find square root value of n
- * @a: lower bound of possible square root
- * @b: upper bound of possible square root
+ * @a: same as n;
+ * @b: iterates from 1 to n
  * @n: number to find its square root
  * Return: returns -1 if square toot not found or square root of n
  */
 int _sqrt(int n, int a, int b)
 {
-	int check_root;
-
-	if (a > b)
+	if (b * b == a)
+	{
+		return (b);
+	}
+	else if (b * b > a)
 	{
 		return (-1);
 	}
-	check_root = (a + b) / 2;
-	if ((check_root * check_root) == n)
-	{
-		return (check_root);
-	}
-	else if ((check_root * check_root) > n)
-	{
-		return (_sqrt(n, a, check_root - 1));
-	}
-	else
-	{
-		return (_sqrt(n, check_root + 1, b));
-	}
+	return (_sqrt(n, a, b + 1));
 }
 /**
  * _sqrt_recursion - function that returns the natural square root of a number
@@ -43,8 +33,10 @@ int _sqrt_recursion(int n)
 	{
 		return (1);
 	}
-	else
+	else if (n == 0)
 	{
-		return (_sqrt(n, 1, n / 2));
+		return (0);
 	}
+
+	return (_sqrt(n, n, 1));
 }
