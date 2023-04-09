@@ -9,6 +9,7 @@
 int main(int argc, char *argv[])
 {
 	long int product;
+
 	if (argc <= 2)
 	{
 		printf("Error\n");
