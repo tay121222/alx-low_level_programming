@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
-#include <errno.h>
 /**
  * main - start of program
  * @argc: total count of argument
@@ -12,7 +11,7 @@ int main(int argc, char *argv[])
 {
 	int i = 1;
 	long int sum = 0;
-	char *endprt;
+	char *endptr;
 	long int value;
 
 	if (argc <= 1)
@@ -32,7 +31,7 @@ int main(int argc, char *argv[])
 			{
 				value = strtol(argv[i], &endptr, 10);
 
-				if (*endptr != '\0' || value < 0 || errno == ERANGE)
+				if (*endptr != '\0' || value < 0)
 				{
 					printf("Error\n");
 					return (1);
