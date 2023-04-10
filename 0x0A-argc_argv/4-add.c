@@ -27,7 +27,15 @@ int main(int argc, char *argv[])
 			}
 			else
 			{
-				sum += (strtol(argv[i], NULL, 10));
+				if ((strtol(argv[i], NULL, 10) < 0))
+				{
+					printf("Error\n");
+					return (1);
+				}
+				else
+				{
+					sum += (strtol(argv[i], NULL, 10));
+				}
 			}
 			i++;
 		}
