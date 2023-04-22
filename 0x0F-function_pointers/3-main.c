@@ -28,17 +28,10 @@ int main(int argc, char *argv[])
 
 	op_func = get_op_func(operator);
 
-	switch (*operator)
+	if (operator[1] != '\0')
 	{
-		case '+':
-		case '-':
-		case '*':
-		case '/':
-		case '%':
-			break;
-		default:
-			printf("Error\n");
-			exit(99);
+		printf("Error\n");
+		exit(99);
 	}
 
 	if ((*operator == '/' || *operator == '%') && num2 == 0)
