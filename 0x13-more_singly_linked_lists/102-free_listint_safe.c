@@ -1,77 +1,48 @@
 #include "lists.h"
 #include <stdlib.h>
 #include <stdio.h>
-
-int find_in_listp(listp_t *head, const void *ptr)
-{
-	listp_t *node = head;
-
-	while (node != NULL)
-	{
-		if (node->p == ptr)
-			return (1);
-		node = node->next;
-	}
-	return (0);
-}
-
-void free_listint(listint_t *head)
-{
-	listint_t *node, *next;
-
-	node = head;
-	while (node != NULL)
-	{
-		next = node->next;
-		free(node);
-		node = next;
-	}
-}
-
+/**
+ * free_listint_safe - function that frees a listint_t list
+ * @h: pointer to a pointer to the head of linked list
+ *
+ * Return: the size of the list that was free’d
+ */
 size_t free_listint_safe(listint_t **h)
 {
 	size_t count = 0;
-	listp_t *hptr = NULL, *new = NULL, *add = NULL;
-	listint_t *node = NULL, *next = NULL;
+	listp_t *hptr = NULL, *new, *add;
+	listint_t *node;
 
-	if (h == NULL)
-		return (0);
-
-	node = *h;
-	while (node != NULL)
+	while (*h != NULL)
 	{
 		new = malloc(sizeof(listp_t));
 		if (new == NULL)
 		{
-			free_listp(&hptr);
 			exit(98);
 		}
-		new->p = (void *)node;
+		new->p = (void *)*h;
 		new->next = hptr;
 		hptr = new;
-
 		add = hptr;
-		while (add->next != NULL)
+
+		while (add->next)
 		{
 			add = add->next;
-			if (node == (listint_t *)add->p)
+			if (*h == add->p)
 			{
-				/*printf("-> [%p] %d\n", (void *)node, node->n);*/
-				free_listp(&hptr);
-				free_listint(*h);
 				*h = NULL;
+				free_listp(&hptr);
 				return (count);
 			}
 		}
 
-		/*printf("[%p] %d\n", (void *)node, node->n);*/
-		next = node->next;
+		node = *h;
+		*h = (*h)->next;
 		free(node);
-		node = next;
 		count++;
 	}
 
-	free_listp(&hptr);
 	*h = NULL;
+	free_listp(&hptr);
 	return (count);
 }
