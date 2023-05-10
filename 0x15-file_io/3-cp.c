@@ -2,18 +2,25 @@
 #define BUF_SIZE 1024
 
 /**
- * print_error - Prints error message to stderr
- * @message: The error message to print
- * @file: the file that caused error ro NULL
+ * open_file2 - opens a file and returns descriptor
+ * @file: the file to open
+ * @flags: file flags
+ * @mode: the file mode
+ *
+ * Return: The file descriptor or -1;
  */
-void print_error(char *message, char *file)
+int open_file2(char *file, int flags, int mode)
 {
-	if (file)
-		dprintf(STDERR_FILENO, "Error: %s %s\n", message, file);
-	else
-		dprintf(STDERR_FILENO, "%s\n", message);
-}
+	int fd = open(file, flags, mode);
 
+	if (fd < 0)
+	{
+		dprintf(STDERR_FILENO, "Error: Can't write to %s\n", file);
+		exit(99);
+	}
+
+	return (fd);
+}
 /**
  * open_file - opens a file and returns descriptor
  * @file: the file to open
@@ -26,9 +33,9 @@ int open_file(char *file, int flags, int mode)
 {
 	int fd = open(file, flags, mode);
 
-	if (fd == -1)
+	if (fd < 0)
 	{
-		print_error("Can't open", file);
+		dprintf(STDERR_FILENO, "Error: Can't read from File %s\n", file);
 		exit(98);
 	}
 
@@ -41,9 +48,9 @@ int open_file(char *file, int flags, int mode)
  */
 void close_file(int fd)
 {
-	if (close(fd) == -1)
+	if (close(fd) < 0)
 	{
-		dprintf(STDERR_FILENO, "Error: Can't close fd %d\n", fd);
+		dprintf(STDERR_FILENO, "Error: Can't close fd %i\n", fd);
 		exit(100);
 	}
 }
@@ -62,7 +69,7 @@ int copy_file(char *src, char *dest)
 	int b_read, b_write;
 
 	fd_from =  open_file(src, O_RDONLY, 0);
-	fd_to = open_file(dest, O_WRONLY | O_CREAT | O_TRUNC, 0664);
+	fd_to = open_file2(dest, O_WRONLY | O_CREAT | O_TRUNC, 0664);
 
 	do {
 		b_read = read(fd_from, buffer, sizeof(buffer));
@@ -72,6 +79,8 @@ int copy_file(char *src, char *dest)
 			ret = 98;
 			break;
 		}
+		else if (b_read == 0)
+			break;
 		b_write = write(fd_to, buffer, b_read);
 		if (b_write == -1 || b_write != b_read)
 		{
@@ -79,7 +88,7 @@ int copy_file(char *src, char *dest)
 			ret = 99;
 			break;
 		}
-	} while (b_read > 0);
+	} while (b_write >= BUF_SIZE);
 
 	close_file(fd_from);
 	close_file(fd_to);
