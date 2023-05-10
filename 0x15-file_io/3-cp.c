@@ -59,13 +59,20 @@ int copy_file(char *src, char *dest)
 {
 	int fd_from, fd_to, ret = 0;
 	char buffer[BUF_SIZE];
-	ssize_t b_read, b_write;
+	int b_read, b_write;
 
 	fd_from =  open_file(src, O_RDONLY, 0);
 	fd_to = open_file(dest, O_WRONLY | O_CREAT | O_TRUNC, 0664);
 
-	while ((b_read = read(fd_from, buffer, sizeof(buffer))) > 0)
+	do
 	{
+		b_read = read (fd_from, buffer, sizeof(buffer));
+		if (b_read == -1)
+		{
+			print_error("Can't read from", src);
+			ret = 98;
+			break;
+		}
 		b_write = write(fd_to, buffer, b_read);
 		if (b_write == -1 || b_write != b_read)
 		{
@@ -73,13 +80,7 @@ int copy_file(char *src, char *dest)
 			ret = 99;
 			break;
 		}
-	}
-
-	if (b_read == -1)
-	{
-		print_error("Can't read from", src);
-		ret = 98;
-	}
+	} while (b_read > 0);
 
 	close_file(fd_from);
 	close_file(fd_to);
