@@ -35,7 +35,7 @@ int open_file(char *file, int flags, int mode)
 
 	if (fd < 0)
 	{
-		dprintf(STDERR_FILENO, "Error: Can't read from File %s\n", file);
+		dprintf(STDERR_FILENO, "Error: Can't read from file %s\n", file);
 		exit(98);
 	}
 
@@ -73,7 +73,7 @@ int copy_file(char *src, char *dest)
 
 	do {
 		b_read = read(fd_from, buffer, sizeof(buffer));
-		if (b_read == -1)
+		if (b_read < 0)
 		{
 			dprintf(STDERR_FILENO, "Error: Can't read from file %s\n", src);
 			ret = 98;
@@ -82,7 +82,7 @@ int copy_file(char *src, char *dest)
 		else if (b_read == 0)
 			break;
 		b_write = write(fd_to, buffer, b_read);
-		if (b_write == -1 || b_write != b_read)
+		if (b_write < 0)
 		{
 			dprintf(STDERR_FILENO, "Error: Can't write to %s\n", dest);
 			ret = 99;
