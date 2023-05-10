@@ -11,7 +11,7 @@ void print_error(char *message, char *file)
 	if (file)
 		dprintf(STDERR_FILENO, "Error: %s %s\n", message, file);
 	else
-		dprintf(STDERR_FILENO, "%s", message);
+		dprintf(STDERR_FILENO, "%s\n", message);
 }
 
 /**
@@ -43,7 +43,7 @@ void close_file(int fd)
 {
 	if (close(fd) == -1)
 	{
-		print_error("Can't close fd", NULL);
+		dprintf(STDERR_FILENO, "Error: Can't close fd %d\n", fd);
 		exit(100);
 	}
 }
@@ -69,14 +69,14 @@ int copy_file(char *src, char *dest)
 		b_read = read (fd_from, buffer, sizeof(buffer));
 		if (b_read == -1)
 		{
-			print_error("Can't read from", src);
+			dprintf(STDERR_FILENO, "Can't read from file %s\n", src);
 			ret = 98;
 			break;
 		}
 		b_write = write(fd_to, buffer, b_read);
 		if (b_write == -1 || b_write != b_read)
 		{
-			print_error("Can't write to", dest);
+			dprintf(STDERR_FILENO, "Error: Can't write to %s\n", dest);
 			ret = 99;
 			break;
 		}
