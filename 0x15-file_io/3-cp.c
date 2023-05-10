@@ -75,9 +75,9 @@ int copy_file(char *src, char *dest)
 		b_read = read(fd_from, buffer, sizeof(buffer));
 		if (b_read == -1)
 		{
-			dprintf(STDERR_FILENO, "Can't read from file %s\n", src);
+			dprintf(STDERR_FILENO, "Error: Can't read from file %s\n", src);
 			ret = 98;
-			break;
+			exit(98);
 		}
 		else if (b_read == 0)
 			break;
@@ -86,7 +86,7 @@ int copy_file(char *src, char *dest)
 		{
 			dprintf(STDERR_FILENO, "Error: Can't write to %s\n", dest);
 			ret = 99;
-			break;
+			exit(99);
 		}
 	} while (b_write >= BUF_SIZE);
 
