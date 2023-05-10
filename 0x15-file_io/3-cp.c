@@ -64,9 +64,8 @@ int copy_file(char *src, char *dest)
 	fd_from =  open_file(src, O_RDONLY, 0);
 	fd_to = open_file(dest, O_WRONLY | O_CREAT | O_TRUNC, 0664);
 
-	do
-	{
-		b_read = read (fd_from, buffer, sizeof(buffer));
+	do {
+		b_read = read(fd_from, buffer, sizeof(buffer));
 		if (b_read == -1)
 		{
 			dprintf(STDERR_FILENO, "Can't read from file %s\n", src);
