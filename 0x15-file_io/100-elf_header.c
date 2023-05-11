@@ -4,55 +4,53 @@
  * print_abi - prints ABI version
  * @abi : ABI byte
  */
-void print_abi(unsigned char abi)
+void print_abi(unsigned char *abi)
 {
-	printf("ABI version: %u\n", abi);
+	printf("  ABI version:                    %u\n",
+			abi[EI_ABIVERSION]);
 }
 
 /**
  * print_osabi - prints OS ABI
  * @osabi : the PS ABI byte
  */
-void print_osabi(unsigned char osabi)
+void print_osabi(unsigned char *osabi)
 {
-	printf("OS/ABI: ");
-	switch (osabi)
+	printf("  OS/ABI: ");
+	switch (osabi[EI_OSABI])
 	{
-		case ELFOSABI_SYSV:
-			printf("UNIX System V ABI\n");
+		case ELFOSABI_NONE:
+			printf("UNIX - System V\n");
 			break;
 		case ELFOSABI_HPUX:
-			printf("HP-UX ABI\n");
+			printf("UNIX - HP-UX\n");
 			break;
 		case ELFOSABI_NETBSD:
-			printf("NetBSD ABI\n");
+			printf("UNIX - NetBSD\n");
 			break;
 		case ELFOSABI_LINUX:
-			printf("Linux ABI\n");
+			printf("UNIX - Linux\n");
 			break;
 		case ELFOSABI_SOLARIS:
-			printf("Solaris ABI\n");
+			printf("UNIX - Solaris\n");
 			break;
 		case ELFOSABI_IRIX:
-			printf("IRIX ABI\n");
+			printf("UNIX - IRIX\n");
 			break;
 		case ELFOSABI_FREEBSD:
-			printf("FreeBSD ABI\n");
+			printf("UNIX - FreeBSD\n");
 			break;
 		case ELFOSABI_TRU64:
-			printf("Compaq TRU64 UNIX ABI\n");
-			break;
-		case ELFOSABI_ARM_AEABI:
-			printf("ARM EABI\n");
+			printf("UNIX - TRU64\n");
 			break;
 		case ELFOSABI_ARM:
 			printf("ARM\n");
 			break;
 		case ELFOSABI_STANDALONE:
-			printf("Standalone (embedded) application\n");
+			printf("Standalone App\n");
 			break;
 		default:
-			printf("Unknown\n");
+			printf("<unknown: %x>\n", osabi[EI_OSABI]);
 			break;
 	}
 }
@@ -61,35 +59,35 @@ void print_osabi(unsigned char osabi)
  * print_version - prints version info
  * @elf_version: the version byte
  */
-void print_version(unsigned char elf_version)
+void print_version(unsigned char *elf_version)
 {
-	printf("ELF Version: ");
-	if (elf_version == EV_CURRENT)
-		printf("Current version\n");
+	printf("Version: %d", elf_version[EI_VERSION]);
+	if (elf_version[EI_VERSION] == EV_CURRENT)
+		printf(" (current)\n");
 	else
-		printf("Invalid version\n");
+		printf("\n");
 }
 
 /**
  * print_data - Prints the endianness of an ELF File
  * @elf_data: ELF class
  */
-void print_data(unsigned char elf_data)
+void print_data(unsigned char *elf_data)
 {
-	printf("Data Encoding: ");
-	switch (elf_data)
+	printf("Data: ");
+	switch (elf_data[EI_DATA])
 	{
 		case ELFDATANONE:
-			printf("Invalid data encoding\n");
+			printf("none\n");
 			break;
 		case ELFDATA2LSB:
-			printf("Little Endian\n");
+			printf("2's compement, little endian\n");
 			break;
 		case ELFDATA2MSB:
-			printf("Big Endian\n");
+			printf("2's compement, big Endian\n");
 			break;
 		default:
-			printf("Unknown data encoding\n");
+			printf("<unknown: %x>\n", elf_data[EI_CLASS]);
 			break;
 	}
 }
@@ -98,22 +96,22 @@ void print_data(unsigned char elf_data)
  * print_class - Prints the architech.. class of an ELF File
  * @elf_class: ELF Class
  */
-void print_class(unsigned char elf_class)
+void print_class(unsigned char *elf_class)
 {
-	printf("ELF Class: ");
-	switch (elf_class)
+	printf("Class: ");
+	switch (elf_class[EI_CLASS])
 	{
 		case ELFCLASSNONE:
-			printf("Invalid class\n");
+			printf("none\n");
 			break;
 		case ELFCLASS32:
-			printf("32-bit objects\n");
+			printf("ELF32\n");
 			break;
 		case ELFCLASS64:
-			printf("64-bit objects\n");
+			printf("ELF64\n");
 			break;
 		default:
-			printf("Unknown class\n");
+			printf("<unknown: %x>\n", elf_class[EI_CLASS]);
 			break;
 	}
 }
@@ -253,15 +251,13 @@ void print_type(void *header, unsigned char *e_ident)
  */
 int main(int argc, char *argv[])
 {
-	int fd;
-	unsigned char e_ident[EI_NIDENT];
+	int fd, fr;
 	Elf64_Ehdr *hdr64;
-	Elf32_Ehdr *hdr32;
 
 	if (argc != 2)
 	{
 		dprintf(STDERR_FILENO, "Usage: %s elf_filename\n", argv[0]);
-		return (98);
+		exit(98);
 	}
 
 	fd = open(argv[1], O_RDONLY);
@@ -269,66 +265,38 @@ int main(int argc, char *argv[])
 	if (fd == -1)
 	{
 		dprintf(STDERR_FILENO, "Error: Cannot open %s\n", argv[1]);
-		return (98);
+		exit(98);
 	}
 
-	if (read(fd, e_ident, EI_NIDENT) == -1)
+	hdr64 = malloc(sizeof(Elf64_Ehdr));
+
+	if (hdr64 == NULL)
 	{
 		dprintf(STDERR_FILENO, "Error: Cannot read from file %s\n", argv[1]);
 		close_elf(fd);
-		return (98);
+		exit(98);
 	}
 
-	check_elf(e_ident);
-	print_magic(e_ident);
-	print_class(e_ident[EI_CLASS]);
-	print_data(e_ident[EI_CLASS]);
-	print_version(e_ident[EI_CLASS]);
-	print_abi(e_ident[EI_CLASS]);
-	print_osabi(e_ident[EI_CLASS]);
+	fr = read(fd, hdr64, sizeof(Elf64_Ehdr));
 
-	if (lseek(fd, EI_NIDENT, SEEK_SET) == -1)
+	if (fr == -1)
 	{
-		dprintf(STDERR_FILENO, "Error: Cannot lseek to offset %d\n", EI_NIDENT);
+		free(hdr64);
 		close_elf(fd);
-		return (98);
+		dprintf(STDERR_FILENO, "Error: Cannot open %s\n", argv[1]);
+		exit(98);
 	}
 
-	if (e_ident[EI_CLASS] == ELFCLASS32)
-	{
-		hdr32 = malloc(sizeof(Elf32_Ehdr));
-		if (read(fd, hdr32, sizeof(Elf32_Ehdr)) == -1)
-		{
-			dprintf(STDERR_FILENO, "Error: Cannot read from file %s\n", argv[1]);
-			close_elf(fd);
-			free(hdr32);
-			return (98);
-		}
-	}
-	else if (e_ident[EI_CLASS] == ELFCLASS64)
-	{
-		hdr64 = malloc(sizeof(Elf64_Ehdr));
-		if (read(fd, hdr64, sizeof(Elf64_Ehdr)) == -1)
-		{
-			dprintf(STDERR_FILENO, "Error: Cannot read from file %s\n", argv[1]);
-			close_elf(fd);
-			free(hdr64);
-			return (98);
-		}
-	}
-
-	if (e_ident[EI_CLASS] == ELFCLASS32)
-		print_entry(hdr32, e_ident);
-	else if (e_ident[EI_CLASS] == ELFCLASS64)
-		print_entry(hdr64, e_ident);
-
-	if (e_ident[EI_CLASS] == ELFCLASS32)
-		print_type(hdr32, e_ident);
-	else if (e_ident[EI_CLASS] == ELFCLASS64)
-		print_type(hdr64, e_ident);
+	check_elf(hdr64->e_ident);
+	print_magic(hdr64->e_ident);
+	print_class(hdr64->e_ident);
+	print_data(hdr64->e_ident);
+	print_version(hdr64->e_ident);
+	print_abi(hdr64->e_ident);
+	print_osabi(hdr64->e_ident);
+	print_entry(hdr64, hdr64->e_ident);
 
 	close_elf(fd);
-	free(hdr32);
 	free(hdr64);
 	return (0);
 }
