@@ -317,13 +317,6 @@ int main(int argc, char *argv[])
 		}
 	}
 
-	if (lseek(fd, EI_NIDENT, SEEK_SET) == -1)
-	{
-		dprintf(STDERR_FILENO, "Error: Cannot lseek to offset %d\n", EI_NIDENT);
-		close_elf(fd);
-		return (98);
-	}
-
 	if (e_ident[EI_CLASS] == ELFCLASS32)
 		print_entry(hdr32, e_ident);
 	else if (e_ident[EI_CLASS] == ELFCLASS64)
