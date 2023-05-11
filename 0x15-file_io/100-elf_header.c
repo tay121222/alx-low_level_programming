@@ -6,7 +6,7 @@
  */
 void print_abi(unsigned char *abi)
 {
-	printf("  ABI version:                    %u\n",
+	printf("  ABI version:                    %d\n",
 			abi[EI_ABIVERSION]);
 }
 
@@ -16,7 +16,7 @@ void print_abi(unsigned char *abi)
  */
 void print_osabi(unsigned char *osabi)
 {
-	printf("  OS/ABI: ");
+	printf("  OS/ABI:			    ");
 	switch (osabi[EI_OSABI])
 	{
 		case ELFOSABI_NONE:
@@ -61,7 +61,7 @@ void print_osabi(unsigned char *osabi)
  */
 void print_version(unsigned char *elf_version)
 {
-	printf("Version: %d", elf_version[EI_VERSION]);
+	printf("  Version:		   %d", elf_version[EI_VERSION]);
 	if (elf_version[EI_VERSION] == EV_CURRENT)
 		printf(" (current)\n");
 	else
@@ -74,7 +74,7 @@ void print_version(unsigned char *elf_version)
  */
 void print_data(unsigned char *elf_data)
 {
-	printf("Data: ");
+	printf("Data:			      ");
 	switch (elf_data[EI_DATA])
 	{
 		case ELFDATANONE:
@@ -98,7 +98,7 @@ void print_data(unsigned char *elf_data)
  */
 void print_class(unsigned char *elf_class)
 {
-	printf("Class: ");
+	printf("  Class:			     ");
 	switch (elf_class[EI_CLASS])
 	{
 		case ELFCLASSNONE:
@@ -295,6 +295,7 @@ int main(int argc, char *argv[])
 	print_abi(hdr64->e_ident);
 	print_osabi(hdr64->e_ident);
 	print_entry(hdr64, hdr64->e_ident);
+	print_type(hdr64, hdr64->e_ident);
 
 	close_elf(fd);
 	free(hdr64);
