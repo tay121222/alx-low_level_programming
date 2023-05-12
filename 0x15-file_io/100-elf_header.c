@@ -6,7 +6,7 @@
  */
 void print_abi(unsigned char *abi)
 {
-	printf("  ABI version:                       %d\n",
+	printf("  ABI Version:                       %d\n",
 			abi[EI_ABIVERSION]);
 }
 
@@ -249,14 +249,14 @@ int main(__attribute__((unused)) int argc, char *argv[])
 
 	if (fd == -1)
 	{
-		dprintf(STDERR_FILENO, "Error: Cannot open %s\n", argv[1]);
+		dprintf(STDERR_FILENO, "Error: Can't open file %s\n", argv[1]);
 		exit(98);
 	}
 
 	hdr64 = malloc(sizeof(Elf64_Ehdr));
 	if (hdr64 == NULL)
 	{
-		dprintf(STDERR_FILENO, "Error: Cannot read from file %s\n", argv[1]);
+		dprintf(STDERR_FILENO, "Error: Can't read from file %s\n", argv[1]);
 		close_elf(fd);
 		exit(98);
 	}
@@ -265,7 +265,7 @@ int main(__attribute__((unused)) int argc, char *argv[])
 	{
 		free(hdr64);
 		close_elf(fd);
-		dprintf(STDERR_FILENO, "Error: Cannot open %s\n", argv[1]);
+		dprintf(STDERR_FILENO, "Error: Can't read from file %s\n", argv[1]);
 		exit(98);
 	}
 	check_elf(hdr64->e_ident);
