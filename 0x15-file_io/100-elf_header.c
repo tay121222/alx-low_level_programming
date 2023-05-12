@@ -1,5 +1,7 @@
 #include "main.h"
 
+void print_them_all(Elf64_Ehdr *hdr64, int fd);
+
 /**
  * print_abi - prints ABI version
  * @abi : ABI byte
@@ -246,7 +248,10 @@ int main(__attribute__((unused)) int argc, char *argv[])
 	Elf64_Ehdr *hdr64;
 
 	if (argc != 2)
+	{
 		dprintf(STDERR_FILENO, "Usage: %s elf_filename\n", argv[0]);
+		exit(98);
+	}
 	fd = open(argv[1], O_RDONLY);
 	if (fd < 0)
 	{
@@ -268,6 +273,17 @@ int main(__attribute__((unused)) int argc, char *argv[])
 		dprintf(STDERR_FILENO, "Error: Can't read from file %s\n", argv[1]);
 		exit(98);
 	}
+	print_them_all(hdr64, fd);
+	return (0);
+}
+
+/**
+ * print_them_all - displays the information contained in the ELF header
+ * @hdr64: pointer to a Elf64_Ehdr structure
+ * @fd: file descriptor class
+ */ 
+void print_them_all(Elf64_Ehdr *hdr64, int fd)
+{
 	check_elf(hdr64->e_ident);
 	printf("ELF Header:\n");
 	print_magic(hdr64->e_ident);
@@ -280,5 +296,4 @@ int main(__attribute__((unused)) int argc, char *argv[])
 	print_entry(hdr64->e_entry, hdr64->e_ident);
 	close_elf(fd);
 	free(hdr64);
-	return (0);
 }
