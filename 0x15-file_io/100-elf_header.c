@@ -238,7 +238,7 @@ void print_type(unsigned int e_type, unsigned char *e_ident)
  *
  * Return: 0 on sucess, 98 on failure
  */
-int main( __attribute__((unused)) int argc, char *argv[])
+int main(__attribute__((unused)) int argc, char *argv[])
 {
 	int fd, fr;
 	Elf64_Ehdr *hdr64;
