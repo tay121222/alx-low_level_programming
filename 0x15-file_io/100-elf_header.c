@@ -81,10 +81,10 @@ void print_data(unsigned char *elf_data)
 			printf("none\n");
 			break;
 		case ELFDATA2LSB:
-			printf("2's compement, little endian\n");
+			printf("2's complement, little endian\n");
 			break;
 		case ELFDATA2MSB:
-			printf("2's compement, big Endian\n");
+			printf("2's complement, big Endian\n");
 			break;
 		default:
 			printf("<unknown: %x>\n", elf_data[EI_CLASS]);
@@ -203,35 +203,34 @@ void print_entry(unsigned long int e_entry, unsigned char *e_ident)
  */
 void print_type(unsigned int e_type, unsigned char *e_ident)
 {
-	const char *string_type = NULL;
 
 	if (e_ident[EI_DATA] == ELFDATA2MSB)
 	{
 		e_type = ((e_type << 8) & 0xFF00) | ((e_type >> 8) & 0xFF);
 	}
+	printf("  Type:                              ");
 
 	switch (e_type)
 	{
 		case ET_NONE:
-			string_type = ("NONE (None)");
+			printf("NONE (None)\n");
 			break;
 		case ET_REL:
-			string_type = ("REL (Relocatable file)");
+			printf("REL (Relocatable file)\n");
 			break;
 		case ET_EXEC:
-			string_type = ("EXEC (Executable file)");
+			printf("EXEC (Executable file)\n");
 			break;
 		case ET_DYN:
-			string_type = ("DYN (Shared object file)");
+			printf("DYN (Shared object file)\n");
 			break;
 		case ET_CORE:
-			string_type = ("CORE (Core file)");
+			printf("CORE (Core file)\n");
 			break;
 		default:
-			string_type = ("<unknown>");
+			printf("<unknown: %x>\n", e_type);
 			break;
-		}
-	printf("  Type:                              %s\n", string_type);
+	}
 }
 
 /**
