@@ -173,28 +173,32 @@ void close_elf(int eld)
 
 /**
  * print_entry - Prints the entry point of an ELF File
- * @header: Pointer to ELF header struct
+ * @e_entry: address of the ELF entry point
  * @e_ident: Array containg the ELF identification bytes
  */
 void print_entry(unsigned long int e_entry, unsigned char *e_ident)
 {
 	if (e_ident[EI_DATA] == ELFDATA2MSB)
-		{
-			printf("  Entry point address:          ");
-			e_entry = ((e_entry << 8) & 0xFF00FF000) |
-			       	((e_entry >> 8) & 0xFF00FF);
-			e_entry = (e_entry << 16) | (e_entry >> 16);
-		}
+	{
+		printf("  Entry point address:               ");
+		e_entry = ((e_entry << 8) & 0xFF00FF00) |
+			((e_entry >> 8) & 0xFF00FF);
+		e_entry = (e_entry << 16) | (e_entry >> 16);
+	}
 
 	if (e_ident[EI_CLASS] == ELFCLASS32)
+	{
 		printf("%#x\n", (unsigned int)e_entry);
+	}
 	else
+	{
 		printf("%#lx\n", e_entry);
+	}
 }
 
 /**
  * print_type - Prints the type of an ELF File
- * @header: Pointer to ELF header struct
+ * @e_type: ELF type
  * @e_ident: Array containg the ELF identification bytes
  */
 void print_type(unsigned int e_type, unsigned char *e_ident)
@@ -234,16 +238,10 @@ void print_type(unsigned int e_type, unsigned char *e_ident)
  *
  * Return: 0 on sucess, 98 on failure
  */
-int main(int argc, char *argv[])
+int main( __attribute__((unused)) int argc, char *argv[])
 {
 	int fd, fr;
 	Elf64_Ehdr *hdr64;
-
-	if (argc != 2)
-	{
-		dprintf(STDERR_FILENO, "Usage: %s elf_filename\n", argv[0]);
-		exit(98);
-	}
 
 	fd = open(argv[1], O_RDONLY);
 
@@ -254,16 +252,13 @@ int main(int argc, char *argv[])
 	}
 
 	hdr64 = malloc(sizeof(Elf64_Ehdr));
-
 	if (hdr64 == NULL)
 	{
 		dprintf(STDERR_FILENO, "Error: Cannot read from file %s\n", argv[1]);
 		close_elf(fd);
 		exit(98);
 	}
-
 	fr = read(fd, hdr64, sizeof(Elf64_Ehdr));
-
 	if (fr == -1)
 	{
 		free(hdr64);
@@ -271,7 +266,6 @@ int main(int argc, char *argv[])
 		dprintf(STDERR_FILENO, "Error: Cannot open %s\n", argv[1]);
 		exit(98);
 	}
-
 	check_elf(hdr64->e_ident);
 	print_magic(hdr64->e_ident);
 	print_class(hdr64->e_ident);
@@ -281,7 +275,6 @@ int main(int argc, char *argv[])
 	print_osabi(hdr64->e_ident);
 	print_entry(hdr64->e_entry, hdr64->e_ident);
 	print_type(hdr64->e_entry, hdr64->e_ident);
-
 	close_elf(fd);
 	free(hdr64);
 	return (0);
