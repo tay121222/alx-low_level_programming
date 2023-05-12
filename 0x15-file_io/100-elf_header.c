@@ -245,14 +245,14 @@ int main(__attribute__((unused)) int argc, char *argv[])
 	int fd, fr;
 	Elf64_Ehdr *hdr64;
 
+	if (argc != 2)
+		dprintf(STDERR_FILENO, "Usage: %s elf_filename\n", argv[0]);
 	fd = open(argv[1], O_RDONLY);
-
 	if (fd == -1)
 	{
 		dprintf(STDERR_FILENO, "Error: Can't open file %s\n", argv[1]);
 		exit(98);
 	}
-
 	hdr64 = malloc(sizeof(Elf64_Ehdr));
 	if (hdr64 == NULL)
 	{
