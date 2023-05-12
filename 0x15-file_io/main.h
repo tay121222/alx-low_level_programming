@@ -20,7 +20,7 @@ void print_class(unsigned char *elf_class);
 void print_magic(unsigned char *ident);
 void check_elf(unsigned char *ident);
 void close_elf(int eld);
-void print_type(void *header, unsigned char *e_ident);
-void print_entry(void *header, unsigned char *e_ident);
+void print_type(unsigned int e_type, unsigned char *e_ident);
+void print_entry(unsigned long int e_entry, unsigned char *e_ident);
 
 #endif

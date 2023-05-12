@@ -176,12 +176,20 @@ void close_elf(int eld)
  * @header: Pointer to ELF header struct
  * @e_ident: Array containg the ELF identification bytes
  */
-void print_entry(void *header, unsigned char *e_ident)
+void print_entry(unsigned long int e_entry, unsigned char *e_ident)
 {
+	if (e_ident[EI_DATA] == ELFDATA2MSB)
+		{
+			printf("  Entry point address:          ");
+			e_entry = ((e_entry << 8) & 0xFF00FF000) |
+			       	((e_entry >> 8) & 0xFF00FF);
+			e_entry = (e_entry << 16) | (e_entry >> 16);
+		}
+
 	if (e_ident[EI_CLASS] == ELFCLASS32)
-		printf("  Entry point address:               0x%x\n", ((Elf32_Ehdr *)header)->e_entry);
-	if (e_ident[EI_CLASS] == ELFCLASS64)
-		printf("  Entry point address:               0x%lx\n", ((Elf64_Ehdr *)header)->e_entry);
+		printf("%#x\n", (unsigned int)e_entry);
+	else
+		printf("%#lx\n", e_entry);
 }
 
 /**
@@ -189,57 +197,34 @@ void print_entry(void *header, unsigned char *e_ident)
  * @header: Pointer to ELF header struct
  * @e_ident: Array containg the ELF identification bytes
  */
-void print_type(void *header, unsigned char *e_ident)
+void print_type(unsigned int e_type, unsigned char *e_ident)
 {
-	if (e_ident[EI_CLASS] == ELFCLASS32)
+	if (e_ident[EI_DATA] == ELFDATA2MSB)
+		e_type >>= 8;
+
+	printf("  Type:                              ");
+
+	switch (e_type)
 	{
-		printf("  Type:                              ");
-		switch (((Elf32_Ehdr *)header)->e_type)
-		{
-			case ET_NONE:
-				printf("NONE (Unknown type)\n");
-				break;
-			case ET_REL:
-				printf("REL (Relocatable file)\n");
-				break;
-			case ET_EXEC:
-				printf("EXEC (Executable file)\n");
-				break;
-			case ET_DYN:
-				printf("DYN (Shared object file)\n");
-				break;
-			case ET_CORE:
-				printf("CORE (Core file)\n");
-				break;
-			default:
-				printf("0x%x (Unknown type)\n", ((Elf32_Ehdr *)header)->e_type);
-				break;
+		case ET_NONE:
+			printf("NONE (None)\n");
+			break;
+		case ET_REL:
+			printf("REL (Relocatable file)\n");
+			break;
+		case ET_EXEC:
+			printf("EXEC (Executable file)\n");
+			break;
+		case ET_DYN:
+			printf("DYN (Shared object file)\n");
+			break;
+		case ET_CORE:
+			printf("CORE (Core file)\n");
+			break;
+		default:
+			printf("<unknown: %x>\n", e_type);
+			break;
 		}
-	}
-	else if (e_ident[EI_CLASS] == ELFCLASS64)
-	{
-		switch (((Elf64_Ehdr *)header)->e_type)
-		{
-			case ET_NONE:
-				printf("NONE (Unknown type)\n");
-				break;
-			case ET_REL:
-				printf("REL (Relocatable file)\n");
-				break;
-			case ET_EXEC:
-				printf("EXEC (Executable file)\n");
-				break;
-			case ET_DYN:
-				printf("DYN (Shared object file)\n");
-				break;
-			case ET_CORE:
-				printf("CORE (Core file)\n");
-				break;
-			default:
-				printf("0x%x (Unknown type)\n", ((Elf64_Ehdr *)header)->e_type);
-				break;
-		}
-	}
 }
 
 /**
@@ -294,8 +279,8 @@ int main(int argc, char *argv[])
 	print_version(hdr64->e_ident);
 	print_abi(hdr64->e_ident);
 	print_osabi(hdr64->e_ident);
-	print_entry(hdr64, hdr64->e_ident);
-	print_type(hdr64, hdr64->e_ident);
+	print_entry(hdr64->e_entry, hdr64->e_ident);
+	print_type(hdr64->e_entry, hdr64->e_ident);
 
 	close_elf(fd);
 	free(hdr64);
