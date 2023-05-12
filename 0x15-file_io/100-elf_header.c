@@ -281,7 +281,7 @@ int main(__attribute__((unused)) int argc, char *argv[])
  * print_them_all - displays the information contained in the ELF header
  * @hdr64: pointer to a Elf64_Ehdr structure
  * @fd: file descriptor class
- */ 
+ */
 void print_them_all(Elf64_Ehdr *hdr64, int fd)
 {
 	check_elf(hdr64->e_ident);
