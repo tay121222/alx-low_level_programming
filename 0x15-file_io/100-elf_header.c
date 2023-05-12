@@ -248,7 +248,7 @@ int main(__attribute__((unused)) int argc, char *argv[])
 	if (argc != 2)
 		dprintf(STDERR_FILENO, "Usage: %s elf_filename\n", argv[0]);
 	fd = open(argv[1], O_RDONLY);
-	if (fd == -1)
+	if (fd < 0)
 	{
 		dprintf(STDERR_FILENO, "Error: Can't open file %s\n", argv[1]);
 		exit(98);
@@ -261,7 +261,7 @@ int main(__attribute__((unused)) int argc, char *argv[])
 		exit(98);
 	}
 	fr = read(fd, hdr64, sizeof(Elf64_Ehdr));
-	if (fr == -1)
+	if (fr < 0)
 	{
 		free(hdr64);
 		close_elf(fd);
