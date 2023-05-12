@@ -258,6 +258,12 @@ int main(__attribute__((unused)) int argc, char *argv[])
 		dprintf(STDERR_FILENO, "Error: Can't open file %s\n", argv[1]);
 		exit(98);
 	}
+	if (lseek(fd, 32, SEEK_SET) < 0)
+	{
+		dprintf(STDERR_FILENO, "Error: Can't seek to position 32 in file %s\n", argv[1]);
+		close(fd);
+		exit(98);
+	}
 	hdr64 = malloc(sizeof(Elf64_Ehdr));
 	if (hdr64 == NULL)
 	{
