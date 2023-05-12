@@ -267,6 +267,7 @@ int main( __attribute__((unused)) int argc, char *argv[])
 		exit(98);
 	}
 	check_elf(hdr64->e_ident);
+	printf("ELF Header:\n");
 	print_magic(hdr64->e_ident);
 	print_class(hdr64->e_ident);
 	print_data(hdr64->e_ident);
