@@ -203,32 +203,35 @@ void print_entry(unsigned long int e_entry, unsigned char *e_ident)
  */
 void print_type(unsigned int e_type, unsigned char *e_ident)
 {
-	if (e_ident[EI_DATA] == ELFDATA2MSB)
-		e_type >>= 8;
+	const char *string_type = NULL;
 
-	printf("  Type:                              ");
+	if (e_ident[EI_DATA] == ELFDATA2MSB)
+	{
+		e_type = ((e_type << 8) & 0xFF00) | ((e_type >> 8) & 0xFF);
+	}
 
 	switch (e_type)
 	{
 		case ET_NONE:
-			printf("NONE (None)\n");
+			string_type = ("NONE (None)");
 			break;
 		case ET_REL:
-			printf("REL (Relocatable file)\n");
+			string_type = ("REL (Relocatable file)");
 			break;
 		case ET_EXEC:
-			printf("EXEC (Executable file)\n");
+			string_type = ("EXEC (Executable file)");
 			break;
 		case ET_DYN:
-			printf("DYN (Shared object file)\n");
+			string_type = ("DYN (Shared object file)");
 			break;
 		case ET_CORE:
-			printf("CORE (Core file)\n");
+			string_type = ("CORE (Core file)");
 			break;
 		default:
-			printf("<unknown: %x>\n", e_type);
+			string_type = ("<unknown>");
 			break;
 		}
+	printf("  Type:                              %s\n", string_type);
 }
 
 /**
@@ -274,7 +277,7 @@ int main(__attribute__((unused)) int argc, char *argv[])
 	print_version(hdr64->e_ident);
 	print_osabi(hdr64->e_ident);
 	print_abi(hdr64->e_ident);
-	print_type(hdr64->e_entry, hdr64->e_ident);
+	print_type(hdr64->e_type, hdr64->e_ident);
 	print_entry(hdr64->e_entry, hdr64->e_ident);
 	close_elf(fd);
 	free(hdr64);
