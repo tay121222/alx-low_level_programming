@@ -6,6 +6,7 @@ perimeter of the island described in grid
 
 
 def island_perimeter(grid):
+    """Function returns the perimeter of the island described in grid"""
     m, n = len(grid), len(grid[0])
     land, water = 0, 0
     for i in range(m):
