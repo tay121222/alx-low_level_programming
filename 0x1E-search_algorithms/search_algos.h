@@ -1,6 +1,8 @@
 #ifndef SEARCH_ALGO
 #define SEARCH_ALGO
 
+#include <stddef.h>
+
 /**
  * struct listint_s - singly linked list
  *
