@@ -2,34 +2,24 @@
 #include "search_algos.h"
 
 /**
- * advanced_binary - Search for a value in a sorted array using binary search.
- * @array: Pointer to the first element of the array.
- * @size: number of elements in the array.
- * @value: value to search for.
+ * recursive_loop - perform binary search recursively
+ * @array: pointer to the first element of the array
+ * @left: left boundary of the array
+ * @right: right boundary of the array
+ * @value: value to search for
  *
- * Return: index of value located, or -1 if not found.
+ * Return: index of the first occurrence of value, or -1
  */
-int advanced_binary(int *array, size_t size, int value)
+int recursive_loop(int *array, size_t left, size_t right, int value)
 {
-	size_t left, right, i;
-	int mid;
+	size_t mid, i;
 
-	if (array == NULL)
-		return (-1);
-
-	left = 0;
-	right = size - 1;
-
-	while (left <= right)
+	if (left <= right)
 	{
 		printf("Searching in array: ");
-		for (i = left; i <= right; i++)
-		{
-			printf("%d", array[i]);
-			if (i < right)
-				printf(", ");
-		}
-		printf("\n");
+		for (i = left; i < right; i++)
+			printf("%d, ", array[i]);
+		printf("%d\n", array[i]);
 
 		mid = left + (right - left) / 2;
 
@@ -40,11 +30,26 @@ int advanced_binary(int *array, size_t size, int value)
 		}
 
 		if (array[mid] < value)
-			left = mid + 1;
+			return (recursive_loop(array, mid + 1, right, value));
 		else
-			right = mid;
-
+			return (recursive_loop(array, left, mid, value));
 	}
 
 	return (-1);
+}
+
+/**
+ * advanced_binary - Search for a value in a sorted array using binary search.
+ * @array: Pointer to the first element of the array.
+ * @size: number of elements in the array.
+ * @value: value to search for.
+ *
+ * Return: index of value located, or -1 if not found.
+ */
+int advanced_binary(int *array, size_t size, int value)
+{
+	if (array == NULL || size == 0)
+		return (-1);
+
+	return (recursive_loop(array, 0, size - 1, value));
 }
